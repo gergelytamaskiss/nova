@@ -1,5 +1,5 @@
 import Fluent
-import FluentPostgresDriver
+import FluentMongoDriver
 import Vapor
 
 // configures your application
@@ -7,14 +7,12 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(.postgres(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
-    ), as: .psql)
+   try app.databases.use(.mongo(
+        connectionString: Environment.get("DATABASE_URL") ?? "mongodb://localhost:27017/nova"
+    ), as: .mongo)
 
     app.migrations.add(CreateTodo())
+    try app.autoMigrate().wait() //enable automatic migration
 
     // register routes
     try routes(app)
