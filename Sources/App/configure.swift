@@ -12,6 +12,8 @@ public func configure(_ app: Application) throws {
     ), as: .mongo)
 
     app.migrations.add(CreateTodo())
+    app.migrations.add(CreateUser())
+    app.migrations.add(CreateUserToken())
     try app.autoMigrate().wait() //enable automatic migration
 
     // register routes
