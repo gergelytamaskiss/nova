@@ -1,0 +1,8 @@
+language: swift
+os: osx
+osx_image: xcode11.5
+before_script:
+- gem install xcpretty
+script:
+- swift package generate-xcodeproj
+- set -o pipefail && xcodebuild -scheme nova-Package clean build | xcpretty
